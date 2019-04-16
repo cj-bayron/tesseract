@@ -224,6 +224,22 @@ void NetworkIO::Copy2DImage(int batch, Pix* pix, float black, float contrast,
   bool color = num_features == 3;
   if (width > target_width) width = target_width;
   uinT32* line = pixGetData(pix);
+
+#ifdef CONGREGO_DEBUG
+  static int cg_before_fw_ctr = 0;
+  // save image
+  char buf[10];
+  std::string output_filename("_test.jpg");
+  sprintf(buf, "%02d", cg_before_fw_ctr++);
+  std::string ctr(buf);
+
+  output_filename = "out/07_beforefw_" + ctr + "_" + output_filename;
+  if(pixWrite(output_filename.c_str(), pix, IFF_JFIF_JPEG) != 0)
+  {
+  	fprintf(stderr, "[Congrego] Error saving image.");
+  }
+#endif
+
   for (int y = 0; y < target_height; ++y, line += wpl) {
     int x = 0;
     if (y < height) {

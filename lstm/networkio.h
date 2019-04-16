@@ -31,6 +31,8 @@
 
 struct Pix;
 
+#define CONGREGO_DEBUG
+
 namespace tesseract {
 
 // Class to contain all the input/output of a network, allowing for fixed or

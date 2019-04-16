@@ -912,6 +912,13 @@ class TESS_API TessBaseAPI {
   // variable will hopefully reduce confusion if the situation changes
   // in the future.
   const char *unknown_title_ = "";
+
+#ifdef CONGREGO_DEBUG
+  /* Congrego */
+ public:
+  std::string original_filename;
+#endif
+
 };  // class TessBaseAPI.
 
 /** Escape a char string - remove &<>"' with HTML codes. */

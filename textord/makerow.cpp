@@ -210,6 +210,11 @@ float make_rows(ICOORD page_tr, TO_BLOCK_LIST *port_blocks) {
       !(BOOL8) textord_test_landscape);
                                  // compute globally
   compute_page_skew(port_blocks, port_m, port_err);
+#if 0
+//#ifdef CONGREGO_DEBUG
+  fprintf(stderr, "[Congrego] skew = %0.2f, noise = %0.2f\n", port_m, port_err);
+#endif
+
   block_it.set_to_list(port_blocks);
   for (block_it.mark_cycle_pt(); !block_it.cycled_list(); block_it.forward()) {
     cleanup_rows_making(page_tr, block_it.data(), port_m, FCOORD(1.0f, 0.0f),
@@ -275,6 +280,11 @@ void fit_lms_line(TO_ROW *row) {
   }
   double error = lms.Fit(&m, &c);
   row->set_line(m, c, error);
+
+#if 0
+//#ifdef CONGREGO_DEBUG
+  fprintf(stderr, "[Congrego] m = %0.2f, c = %0.2f\n", m, c);
+#endif
 }
 
 

@@ -1173,6 +1173,19 @@ bool TessBaseAPI::ProcessPage(Pix* pix, int page_index, const char* filename,
   PERF_COUNT_START("ProcessPage")
   SetInputName(filename);
   SetImage(pix);
+
+#ifdef CONGREGO_DEBUG
+  /* [Congrego] Write image to file */
+  std::string output_filename(this->input_file_->c_str());
+  output_filename =  "out/01_original_" + output_filename;
+
+  Pix* pixClone = GetInputImage();
+  if(pixWrite(output_filename.c_str(), pixClone, IFF_JFIF_JPEG) != 0)
+  {
+	  fprintf(stderr, "[Congrego] Error saving image.");
+  }
+#endif
+
   bool failed = false;
 
   if (tesseract_->tessedit_pageseg_mode == PSM_AUTO_ONLY) {
@@ -2268,6 +2281,18 @@ int TessBaseAPI::FindLines() {
       !Threshold(tesseract_->mutable_pix_binary())) {
     return -1;
   }
+
+#ifdef CONGREGO_DEBUG
+  /* [Congrego] Write image to file */
+  std::string output_filename(this->input_file_->c_str());
+  output_filename = "out/02_binary_" + output_filename;
+
+  Pix* pixClone = this->tesseract_->pix_binary();
+  if(pixWrite(output_filename.c_str(), pixClone, IFF_JFIF_JPEG) != 0)
+  {
+	  fprintf(stderr, "[Congrego] Error saving image.");
+  }
+#endif
 
   tesseract_->PrepareForPageseg();
 

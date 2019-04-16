@@ -29,6 +29,9 @@
 // their includes into the API-level.
 // API-level code should include apitypes.h in preference to this file.
 
+/* CONGREGO */
+#define CONGREGO_DEBUG
+
 /** Number of printers' points in an inch. The unit of the pointsize return. */
 constexpr int kPointsPerInch = 72;
 /**

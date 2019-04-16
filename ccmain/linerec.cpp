@@ -235,12 +235,45 @@ void Tesseract::LSTMRecognizeWord(const BLOCK& block, ROW *row, WERD_RES *word,
       word_box.set_top(baseline + row->x_height() + row->ascenders());
   }
   ImageData* im_data = GetRectImage(word_box, block, kImagePadding, &word_box);
+#ifdef CONGREGO_DEBUG
+  static int cg_line_ctr = 0;
+  // create clone
+  Pix* pix_copy = im_data->GetPix();
+
+  // save image
+  char buf[10];
+  std::string output_filename("_test.jpg");
+  sprintf(buf, "%02d", cg_line_ctr++);
+  std::string ctr(buf);
+
+  output_filename = "out/05_linecropped_" + ctr + "_" + output_filename;
+  if(pixWrite(output_filename.c_str(), pix_copy, IFF_JFIF_JPEG) != 0)
+  {
+  	fprintf(stderr, "[Congrego] Error saving image.");
+  }
+
+  pixDestroy(&pix_copy);
+#endif
   if (im_data == NULL) return;
   lstm_recognizer_->RecognizeLine(*im_data, true, classify_debug_level > 0,
                                   kWorstDictCertainty / kCertaintyScale,
                                   word_box, words);
   delete im_data;
   SearchWords(words);
+
+#ifdef CONGREGO_DEBUG
+  int blob_index;
+  for (int w = 0; w < words->size(); ++w) {
+	WERD_RES* word = (*words)[w];
+	fprintf(stderr, "[Congrego] [Certainty: %02.2f] ", word->best_choice->certainty());
+	for(blob_index=0; blob_index < word->best_choice->length(); blob_index++)
+	{
+      fprintf(stderr, "%s ", word->BestUTF8(blob_index, false));
+	}
+	fprintf(stderr, "\n");
+  }
+  fprintf(stderr, "\n");
+#endif
 }
 
 // Apply segmentation search to the given set of words, within the constraints

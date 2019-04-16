@@ -1298,6 +1298,61 @@ void Tesseract::classify_word_and_language(int pass_n, PAGE_RES_IT* pr_it,
             most_recently_used_->lang.string());
     word->word->bounding_box().print();
   }
+#ifdef CONGREGO_DEBUG
+  static int cg_box_ctr = 0;
+  /*
+  fprintf(stderr, "[Congrego] Pass %d: %s word with lang %s at: ",
+		          pass_n,
+				  word->done ? "Already done" : "Processing",
+				  most_recently_used_->lang.string());
+  word->word->bounding_box().print();
+  */
+  // create copy of binary image
+  int width = pixGetWidth(pix_binary_);
+  int height = pixGetHeight(pix_binary_);
+  Pix* pix_copy = pixCreate(width, height, 1);
+  pix_copy = pixCopy(pix_copy, pix_binary_);
+
+  // get coordinates
+  ICOORD bot_left, top_right;
+  bot_left = word->word->bounding_box().botleft();
+  top_right = word->word->bounding_box().topright();
+
+  // create box object
+  BOX *boxObj = boxCreate(bot_left.x(),
+		                  height - bot_left.y() - word->word->bounding_box().height(),
+						  word->word->bounding_box().width(),
+						  word->word->bounding_box().height());
+
+  if (pixRenderBox(pix_copy, boxObj, 1, L_SET_PIXELS) != 0) {
+    fprintf(stderr, "[Congrego] Error on rendering box.");
+  }
+
+  // save image
+  char buf[10];
+  std::string output_filename("_test.jpg");
+  sprintf(buf, "%02d", cg_box_ctr++);
+  std::string ctr(buf);
+  sprintf(buf, "%d", bot_left.x());
+  std::string ext0(buf);
+  sprintf(buf, "%d", bot_left.y());
+  std::string ext1(buf);
+  sprintf(buf, "%d", top_right.x());
+  std::string ext2(buf);
+  sprintf(buf, "%d", top_right.y());
+  std::string ext3(buf);
+
+  output_filename = "out/04_boxed_" + ctr + "_" + \
+		  	  	  	ext0 + "," + ext1 + "_" + \
+					ext2 + "," + ext3 + output_filename;
+
+  if(pixWrite(output_filename.c_str(), pix_copy, IFF_JFIF_JPEG) != 0)
+  {
+  	fprintf(stderr, "[Congrego] Error saving image.");
+  }
+
+  pixDestroy(&pix_copy);
+#endif
   if (word->done) {
     // If done on pass1, leave it as-is.
     if (!word->tess_failed)

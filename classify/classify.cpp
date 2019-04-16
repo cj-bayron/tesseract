@@ -41,7 +41,7 @@ Classify::Classify()
                  this->params()),
       BOOL_MEMBER(classify_enable_learning, true, "Enable adaptive classifier",
                   this->params()),
-      INT_MEMBER(classify_debug_level, 0, "Classify debug level",
+	  INT_MEMBER(classify_debug_level, 0, "Classify debug level",
                  this->params()),
       INT_MEMBER(classify_norm_method, character, "Normalization Method   ...",
                  this->params()),

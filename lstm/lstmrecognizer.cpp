@@ -252,6 +252,23 @@ bool LSTMRecognizer::RecognizeLine(const ImageData& image_data, bool invert,
   *scale_factor = min_width / *scale_factor;
   inputs->set_int_mode(IsIntMode());
   SetRandomSeed();
+#ifdef CONGREGO_DEBUG
+  static int cg_prepared_line_ctr = 0;
+  // save image
+  char buf[10];
+  std::string output_filename("_test.jpg");
+  sprintf(buf, "%02d", cg_prepared_line_ctr++);
+  std::string ctr(buf);
+
+  output_filename = "out/06_lstmprepared_" + ctr + "_" + output_filename;
+  if(pixWrite(output_filename.c_str(), pix, IFF_JFIF_JPEG) != 0)
+  {
+  	fprintf(stderr, "[Congrego] Error saving image.");
+  }
+
+  //fprintf(stderr, "[Congrego] Network Type: %d\n", network_->type());
+  //network_->InputShape().Print();
+#endif
   Input::PreparePixInput(network_->InputShape(), pix, &randomizer_, inputs);
   network_->Forward(debug, *inputs, NULL, &scratch_space_, outputs);
   // Check for auto inversion.

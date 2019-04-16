@@ -174,6 +174,46 @@ int Tesseract::SegmentPage(const STRING* input_file, BLOCK_LIST* blocks,
   textord_.TextordPage(pageseg_mode, reskew_, width, height, pix_binary_,
                        pix_thresholds_, pix_grey_, splitting || cjk_mode,
                        &diacritic_blobs, blocks, &to_blocks);
+
+#ifdef CONGREGO_DEBUG
+  // create copy of binary image
+  Pix* pix_copy = pixCreate(width, height, 1);
+  pix_copy = pixCopy(pix_copy, pix_binary_);
+  // render lines
+  TO_BLOCK_IT line_block_it = &to_blocks;
+  TO_ROW_IT row_it;
+  TO_ROW *row;
+  l_int32 x1, y1, x2, y2;
+  x1 = 1;
+  x2 = width-1;
+  // iterate through each block, then each row
+  for (line_block_it.mark_cycle_pt(); !line_block_it.cycled_list(); line_block_it.forward ()) {
+    row_it.set_to_list(line_block_it.data()->get_rows());
+    for (row_it.mark_cycle_pt(); !row_it.cycled_list(); row_it.forward()) {
+      row = row_it.data();
+      //fprintf(stderr, "[Congrego] m = %0.2f, c = %0.2f\n", row->line_m(), row->line_c());
+
+      // compute coordinates then render line
+      y1 = height - ((row->line_m() * x1) + row->line_c());
+      y2 = height - ((row->line_m() * x2) + row->line_c());
+      //fprintf(stderr, "[Congrego] Line at (%d, %d): (%d, %d)", x1, y1, x2, y2);
+      if (pixRenderLine(pix_copy, x1, y1, x2, y2, 1, L_SET_PIXELS) != 0) {
+    	  fprintf(stderr, "[Congrego] Error on rendering line.");
+      }
+    }
+  }
+
+  // save image
+  std::string output_filename(input_file->c_str());
+  output_filename = "out/03_lined_" + output_filename;
+  if(pixWrite(output_filename.c_str(), pix_copy, IFF_JFIF_JPEG) != 0)
+  {
+      fprintf(stderr, "[Congrego] Error saving image.");
+  }
+
+  pixDestroy(&pix_copy);
+#endif
+
   return auto_page_seg_ret_val;
 }
 
