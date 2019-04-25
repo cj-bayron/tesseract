@@ -6,7 +6,7 @@
 # Initialization
 # ----------------------------------------
 AC_PREREQ([2.59])
-AC_INIT([tesseract], [4.00.00dev], [https://github.com/tesseract-ocr/tesseract/issues])
+AC_INIT([cgtesseract], [4.00.00dev], [https://github.com/tesseract-ocr/tesseract/issues])
 AC_PROG_CXX([g++ clang++])
 AC_LANG([C++])
 AC_LANG_COMPILER_REQUIRE
@@ -39,7 +39,7 @@ AC_SUBST([PACKAGE_VERSION])
 AC_SUBST([PACKAGE_YEAR])
 AC_SUBST([PACKAGE_DATE])
 
-GENERIC_LIBRARY_NAME=tesseract
+GENERIC_LIBRARY_NAME=cgtesseract
 
 # Release versioning
 GENERIC_MAJOR_VERSION=4
@@ -480,7 +480,7 @@ fi
 # ----------------------------------------
 
 # Output files
-AC_CONFIG_FILES([Makefile tesseract.pc])
+AC_CONFIG_FILES([Makefile cgtesseract.pc])
 AC_CONFIG_FILES([api/Makefile])
 AC_CONFIG_FILES([arch/Makefile])
 AC_CONFIG_FILES([ccmain/Makefile])

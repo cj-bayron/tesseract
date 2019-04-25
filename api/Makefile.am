@@ -51,26 +51,26 @@ libtesseract_la_LIBADD = \
 
 libtesseract_la_LDFLAGS += -version-info $(GENERIC_LIBRARY_VERSION) -no-undefined
 
-bin_PROGRAMS = tesseract
-tesseract_SOURCES = tesseractmain.cpp
-tesseract_CPPFLAGS = $(AM_CPPFLAGS)
+bin_PROGRAMS = cgtesseract
+cgtesseract_SOURCES = tesseractmain.cpp
+cgtesseract_CPPFLAGS = $(AM_CPPFLAGS)
 if VISIBILITY
-tesseract_CPPFLAGS += -DTESS_IMPORTS
+cgtesseract_CPPFLAGS += -DTESS_IMPORTS
 endif
 
-tesseract_LDADD = libtesseract.la
+cgtesseract_LDADD = libtesseract.la
 
 
-tesseract_LDFLAGS = $(OPENCL_LDFLAGS)
+cgtesseract_LDFLAGS = $(OPENCL_LDFLAGS)
 
-tesseract_LDADD += $(LEPTONICA_LIBS)
-tesseract_LDADD += $(OPENMP_CXXFLAGS)
+cgtesseract_LDADD += $(LEPTONICA_LIBS)
+cgtesseract_LDADD += $(OPENMP_CXXFLAGS)
 
 if T_WIN
-tesseract_LDADD += -ltiff
-tesseract_LDADD += -lws2_32
+cgtesseract_LDADD += -ltiff
+cgtesseract_LDADD += -lws2_32
 libtesseract_la_LDFLAGS += -no-undefined -Wl,--as-needed -lws2_32
 endif
 if ADD_RT
-tesseract_LDADD += -lrt
+cgtesseract_LDADD += -lrt
 endif

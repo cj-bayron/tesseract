@@ -64,4 +64,4 @@ doc-clean:
 	rm -rf $(top_srcdir)/doc/html/*
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = tesseract.pc
+pkgconfig_DATA = cgtesseract.pc
