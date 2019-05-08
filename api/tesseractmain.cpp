@@ -23,6 +23,8 @@
 #endif
 
 #include <iostream>
+// CONGREGO
+#include <fstream>
 
 #include "allheaders.h"
 #include "baseapi.h"
@@ -555,6 +557,15 @@ int main(int argc, char** argv) {
       fprintf(stderr, "Error during processing.\n");
       return EXIT_FAILURE;
     }
+#ifdef CONGREGO_DEBUG
+    else {
+    	std::ofstream outfile;
+    	outfile.open("out/conf.txt");
+    	outfile << "aveconf=";
+    	outfile << api.MeanTextConf();
+    	outfile.close();
+    }
+#endif
   }
 
   PERF_COUNT_END
